@@ -12,6 +12,7 @@ Instructions to Build / Run the Docker Image:
   1. docker build -t csc6621-final-project-image .
 
 - Run the Docker Container using below commands
+
   1. docker run -p 8888:8888 csc6621-final-project-image
 
 - Access the jupyternotebook by going to local host and entering the access token
@@ -20,6 +21,8 @@ Instructions to Build / Run the Docker Image:
 Background on Dataset
 CelebA is a large-scale face attributes dataset consisting of 200,000 celebrity images, each with 40 attribute annotations
 Due to its large size and diversity, CelebA is suitable for pretraining facial recognition models, even with a limited number of examples for fine-tuning
+
+Downloading the dataset can be accessed here - https://drive.google.com/drive/folders/0B7EVK8r0v71pTUZsaXdaSnZBZzg?resourcekey=0-rJlzl934LzC-Xp28GeIBzQ&usp=sharing
 
 Data Sets
 
