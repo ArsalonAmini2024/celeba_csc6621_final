@@ -1,6 +1,7 @@
 tensorflow
 keras
 matplotlib
+scikit-learn
 numpy
 # py7zr
 # librarchive-c
