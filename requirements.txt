@@ -1,0 +1,8 @@
+tensorflow
+keras
+matplotlib
+numpy
+# py7zr
+# librarchive-c
+patool
+pyunpack
