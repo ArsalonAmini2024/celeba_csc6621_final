@@ -68,17 +68,25 @@ test_df['label'] = test_df['label'].astype(str)
 logger.info(f"Unique classes in training set: {train_df['label'].nunique()}")
 logger.info(f"Unique classes in testing set: {test_df['label'].nunique()}")
 
-# Move the actual images to the respective folders based on the train-test split of the labels
+# Copy the images to the respective folders based on the train-test split of the labels
 def copy_images(df, source_dir, target_dir):
     # Expand the source and target directories properly
     source_dir = os.path.expanduser(source_dir)
     target_dir = os.path.expanduser(target_dir)
     
     os.makedirs(target_dir, exist_ok=True)  # Ensure target directory exists
+    
     for filename in df['filename']:
-        shutil.copy(os.path.join(source_dir, filename), os.path.join(target_dir, filename))
+        source_path = os.path.join(source_dir, filename)
+        target_path = os.path.join(target_dir, filename)
         
-# Set directory paths
+        # Check if the file already exists in the target directory
+        if not os.path.exists(target_path):
+            shutil.copy(source_path, target_path)
+        else:
+            print(f"File already exists in target: {target_path}")
+
+# Move Images to respective directories
 source_directory = os.path.expanduser('~/Desktop/img_align_celeba')
 train_directory = os.path.expanduser('~/Desktop/train')
 test_directory = os.path.expanduser('~/Desktop/test')
