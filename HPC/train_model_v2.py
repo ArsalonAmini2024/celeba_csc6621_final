@@ -48,7 +48,7 @@ logging_callback = LoggingCallback(logger)
 ##### LOAD AND PREPARE DATA #####
 
 # Load the identity file into a DataFrame
-df = pd.read_csv('~/identity_CelebA.txt', delim_whitespace=True, header=None, names=['filename', 'label'])
+df = pd.read_csv('~/Desktop/identity_CelebA.txt', delim_whitespace=True, header=None, names=['filename', 'label'])
 logger.info("Loaded identity data")
 
 # Count the occurrences of each label
@@ -75,9 +75,9 @@ def copy_images(df, source_dir, target_dir):
         shutil.copy(os.path.join(source_dir, filename), os.path.join(target_dir, filename))
 
 # Set directory paths
-source_directory = '~/img_align_celeba'
-train_directory = '~/train'
-test_directory = '~/test'
+source_directory = '~/Desktop/img_align_celeba'
+train_directory = '~/Desktop/train'
+test_directory = '~/Desktop/test'
 
 # Move train and test images
 copy_images(train_df, source_directory, train_directory)
