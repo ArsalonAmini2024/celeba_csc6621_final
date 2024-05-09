@@ -9,27 +9,25 @@
 #SBATCH --gres=gpu:8
 #SBATCH --partition=dgx
 
-# Set up the conda environment name and path
-CONDA_ENV_NAME="celeba_env"
-CONDA_ENV_PATH=~/Desktop/celeba_csc6621_final/HPC/$CONDA_ENV_NAME
+# Set up the path for the virtual environment
+VENV_PATH=~/Desktop/celeba_csc6621_final/HPC/venv
 
-# Load the conda module (if your system uses modules)
-# module load anaconda/2020.11  # Replace with the correct Anaconda module version
-
-# Create the conda environment if it doesn't already exist
-if ! conda info --envs | grep -q "$CONDA_ENV_NAME"; then
-    conda create -y -p "$CONDA_ENV_PATH" python=3.8  # Adjust Python version as needed
+# Create a virtual environment if it doesn't exist
+if [ ! -d "$VENV_PATH" ]; then
+    python3 -m venv "$VENV_PATH"
 fi
 
-# Activate the conda environment
-source activate "$CONDA_ENV_PATH"
+# Activate the virtual environment
+source "$VENV_PATH/bin/activate"
 
-# Install necessary packages via conda
-conda install -y pandas scikit-learn tensorflow matplotlib seaborn
+# Upgrade pip and install the necessary packages
+pip install --upgrade pip
+pip install pandas scikit-learn tensorflow
 
 # Run the Python training script within this environment
 srun python3 ~/Desktop/celeba_csc6621_final/HPC/train_model_v1.py
 
-# Optional: Deactivate the conda environment
-conda deactivate
+# Optional: Deactivate the virtual environment
+deactivate
+
 
