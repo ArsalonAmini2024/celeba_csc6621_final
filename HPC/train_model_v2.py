@@ -48,7 +48,7 @@ logging_callback = LoggingCallback(logger)
 ##### LOAD AND PREPARE DATA #####
 
 # Load the identity file into a DataFrame
-df = pd.read_csv('~data/identity_CelebA.txt', delim_whitespace=True, header=None, names=['filename', 'label'])
+df = pd.read_csv('~/Celeba_csc6621_final/data/identity_CelebA.txt', delim_whitespace=True, header=None, names=['filename', 'label'])
 logger.info("Loaded identity data")
 
 # Count the occurrences of each label
