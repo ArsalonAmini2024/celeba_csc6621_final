@@ -79,9 +79,9 @@ def copy_images(df, source_dir, target_dir):
         shutil.copy(os.path.join(source_dir, filename), os.path.join(target_dir, filename))
         
 # Set directory paths
-source_directory = '~/Desktop/img_align_celeba'
-train_directory = '~/Desktop/train'
-test_directory = '~/Desktop/test'
+source_directory = os.path.expanduser('~/Desktop/img_align_celeba')
+train_directory = os.path.expanduser('~/Desktop/train')
+test_directory = os.path.expanduser('~/Desktop/test')
 
 # Move train and test images
 copy_images(train_df, source_directory, train_directory)

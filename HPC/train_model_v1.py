@@ -76,10 +76,10 @@ def copy_images(df, source_dir, target_dir):
     for filename in df['filename']:
         shutil.copy(os.path.join(source_dir, filename), os.path.join(target_dir, filename))
         
-# Set directory paths
-source_directory = '~/Desktop/img_align_celeba'
-train_directory = '~/Desktop/train'
-test_directory = '~/Desktop/test'
+# Set directory paths and expand user paths
+source_directory = os.path.expanduser('~/Desktop/img_align_celeba')
+train_directory = os.path.expanduser('~/Desktop/train')
+test_directory = os.path.expanduser('~/Desktop/test')
 
 # Move train and test images
 copy_images(train_df, source_directory, train_directory)
@@ -91,13 +91,13 @@ train_datagen = ImageDataGenerator(rescale=1./255)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(
-    'path_to_train_data',
+    train_directory,
     target_size=(224, 224),
     batch_size=32,
     class_mode='categorical')
 
 test_generator = test_datagen.flow_from_directory(
-    'path_to_test_data',
+    test_directory,
     target_size=(224, 224),
     batch_size=32,
     class_mode='categorical')
