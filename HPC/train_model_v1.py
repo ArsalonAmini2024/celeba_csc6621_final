@@ -15,9 +15,14 @@ from tensorflow.keras.callbacks import Callback, TensorBoard
 from tensorflow.keras.models import Sequential
 
 # Set up logging
-tensorboard_log_dir = os.path.expanduser('~/Desktop/tensorboard_logs')
-tensorboard_callback = TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1, write_graph=True)
-
+# Tensorboard logs
+log_dir = "~/Desktop/tensorboard_logs"
+tensorboard_callback = TensorBoard(
+    log_dir=log_dir, 
+    histogram_freq=1,  # Log weight histograms every epoch
+    write_graph=True,  # Log the computational graph
+    update_freq='epoch'  # Log scalars at each epoch
+)
 class LoggingCallback(Callback):
     def __init__(self, logger):
         super().__init__()
