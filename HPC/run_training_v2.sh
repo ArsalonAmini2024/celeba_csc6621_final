@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=Amini-Arsalon-Celeba-image-classification-Resnet-50
+#SBATCH --job-name=Amini-Arsalon-Celeba-image-classification-ResNet-random-weights
 #SBATCH --output=output_%j.txt
 #SBATCH --error=error_%j.txt
 #SBATCH --ntasks=1
@@ -9,7 +9,5 @@
 #SBATCH --gres=gpu:8
 #SBATCH --partition=dgx
 
-module load cuda/10.1  # Load necessary modules
-module load tensorflow/2.3.0
-
-srun python3 path_to_your_script.py
+# Run the Python training script
+srun python3 ~/Desktop/celeba_csc6621_final/HPC/train_model_v2.py
