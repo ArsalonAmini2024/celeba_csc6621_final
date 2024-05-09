@@ -57,6 +57,10 @@ df_filtered = df[df['label'].map(label_counts) > 25]
 train_df, test_df = train_test_split(df_filtered, test_size=0.2, stratify=df_filtered['label'])
 logger.info(f"Training samples: {len(train_df)}, Testing samples: {len(test_df)}")
 
+# Get the number of unique classes in the training set
+num_classes = train_df['label'].nunique()
+logger.info(f"Unique classes in training set: {num_classes}")
+
 # Convert label columns to strings - required for downstream data generators
 train_df['label'] = train_df['label'].astype(str)
 test_df['label'] = test_df['label'].astype(str)
@@ -131,7 +135,7 @@ base_model = ResNet50(weights=None, include_top=False, input_shape=(224, 224, 3)
 x = base_model.output
 x = GlobalAveragePooling2D()(x)  # Adds a global spatial average pooling layer
 x = Dense(1024, activation='relu')(x)  # Add a fully-connected layer
-predictions = Dense(10177, activation='softmax')(x)  # Output layer for 10,177 classes
+predictions = Dense(num_classes, activation='softmax')(x)  # Output layer match num_classes
 
 # This is the model we will train
 model = Model(inputs=base_model.input, outputs=predictions)

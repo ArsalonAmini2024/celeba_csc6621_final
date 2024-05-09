@@ -56,6 +56,10 @@ df_filtered = df[df['label'].map(label_counts) > 25]
 train_df, test_df = train_test_split(df_filtered, test_size=0.2, stratify=df_filtered['label'])
 logger.info(f"Training samples: {len(train_df)}, Testing samples: {len(test_df)}")
 
+# Get the number of unique classes in the training set
+num_classes = train_df['label'].nunique()
+logger.info(f"Unique classes in training set: {num_classes}")
+
 # Convert label column to string - required for downstream data generators
 train_df['label'] = train_df['label'].astype(str)
 test_df['label'] = test_df['label'].astype(str)
@@ -122,7 +126,6 @@ test_generator = test_datagen.flow_from_directory(
 )
 
 # Define the Sequential model
-num_classes = 10153
 model = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
     MaxPooling2D(2, 2),
