@@ -3,10 +3,11 @@
 #SBATCH --output=output_%j.txt
 #SBATCH --error=error_%j.txt
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=16  
 #SBATCH --time=72:00:00
-#SBATCH --gres=gpu:8
-#SBATCH --partition=dgx
+#SBATCH --mem=128G  #
+#SBATCH --gres=gpu:t4:4  # Request 4 T4 GPUs
+#SBATCH --partition=teaching  # Use the teaching partition
 
 # Set up the path for the virtual environment
 VENV_PATH=~/Desktop/celeba_csc6621_final/HPC/venv
@@ -26,7 +27,8 @@ pip install pandas scikit-learn tensorflow matplotlib seaborn tensorflow-addons
 # Run the Python training script within this environment
 srun python3 ~/Desktop/celeba_csc6621_final/HPC/train_model_v2.py
 
-# Optional: Deactivate the virtual environment
+# Deactivate the virtual environment (optional)
 deactivate
+
 
 
