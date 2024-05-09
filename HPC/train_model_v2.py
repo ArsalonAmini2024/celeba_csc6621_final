@@ -1,10 +1,9 @@
 # System Imports
 import os
-import subprocess
 import shutil
 import logging
 
-# Data pre-processing Libraries
+# Data Pre-processing Libraries
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -14,14 +13,11 @@ from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.layers import GlobalAveragePooling2D, Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.callbacks import TensorBoard
-
+from tensorflow.keras.callbacks import Callback, TensorBoard
 
 # Set up logging
 tensorboard_log_dir = os.path.expanduser('~/Desktop/tensorboard_logs')
 tensorboard_callback = TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1, write_graph=True)
-
 
 class LoggingCallback(Callback):
     def __init__(self, logger):
@@ -29,7 +25,7 @@ class LoggingCallback(Callback):
         self.logger = logger
 
     def on_epoch_end(self, epoch, logs=None):
-        # logs is a dictionary with training/validation loss and metrics (e.g., accuracy)
+        # Logs is a dictionary with training/validation loss and metrics (e.g., accuracy)
         train_acc = logs.get('accuracy', 'N/A')
         val_acc = logs.get('val_accuracy', 'N/A')
         self.logger.info(f"Epoch {epoch + 1}: Training Accuracy = {train_acc}, Validation Accuracy = {val_acc}")
@@ -54,14 +50,14 @@ logger.info("Loaded identity data")
 # Count the occurrences of each label
 label_counts = df['label'].value_counts()
 
-# Remove rows where labels appear less than 25x
+# Remove rows where labels appear less than 25 times
 df_filtered = df[df['label'].map(label_counts) > 25]
 
 # Split into training and testing sets
 train_df, test_df = train_test_split(df_filtered, test_size=0.2, stratify=df_filtered['label'])
 logger.info(f"Training samples: {len(train_df)}, Testing samples: {len(test_df)}")
 
-# Convert label column to string - required for downstream data generators
+# Convert label columns to strings - required for downstream data generators
 train_df['label'] = train_df['label'].astype(str)
 test_df['label'] = test_df['label'].astype(str)
 
@@ -73,7 +69,7 @@ def copy_images(df, source_dir, target_dir):
     # Expand source and target directories properly
     source_dir = os.path.expanduser(source_dir)
     target_dir = os.path.expanduser(target_dir)
-    
+
     os.makedirs(target_dir, exist_ok=True)  # Ensure target directory exists
 
     for label in df['label'].unique():
@@ -105,9 +101,8 @@ logger.info("Completed copying training and testing images")
 # Log the number of files in training and testing directories
 train_files = sum([len(files) for r, d, files in os.walk(train_directory)])
 test_files = sum([len(files) for r, d, files in os.walk(test_directory)])
-logger.info(f"Number of train images: {train_files})
-logger.info(f"Number of test images: {test_files})
-
+logger.info(f"Number of train images: {train_files}")
+logger.info(f"Number of test images: {test_files}")
 
 # Load data using ImageDataGenerator
 train_datagen = ImageDataGenerator(rescale=1./255)
@@ -117,13 +112,15 @@ train_generator = train_datagen.flow_from_directory(
     train_directory,
     target_size=(224, 224),
     batch_size=32,
-    class_mode='categorical')
+    class_mode='categorical'
+)
 
 test_generator = test_datagen.flow_from_directory(
     test_directory,
     target_size=(224, 224),
     batch_size=32,
-    class_mode='categorical')
+    class_mode='categorical'
+)
 
 logger.info("Image data generators initialized")
 
@@ -151,7 +148,7 @@ history = model.fit(
     train_generator,
     epochs=10,
     validation_data=test_generator,
-    callbacks=[logging_callback, tensorboard_callback] 
+    callbacks=[logging_callback, tensorboard_callback]
 )
 logger.info("Model training completed")
 
