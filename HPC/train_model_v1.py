@@ -14,11 +14,9 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import Callback, TensorBoard
 from tensorflow.keras.models import Sequential
 
-
 # Set up logging
 tensorboard_log_dir = os.path.expanduser('~/Desktop/tensorboard_logs')
 tensorboard_callback = TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1, write_graph=True)
-
 
 class LoggingCallback(Callback):
     def __init__(self, logger):
@@ -51,7 +49,7 @@ logger.info("Loaded identity data")
 # Count the occurrences of each label
 label_counts = df['label'].value_counts()
 
-# Remove rows where labels appear less than 25x
+# Remove rows where labels appear less than 25 times
 df_filtered = df[df['label'].map(label_counts) > 25]
 
 # Split into training and testing sets
@@ -67,23 +65,29 @@ logger.info(f"Unique classes in testing set: {test_df['label'].nunique()}")
 
 # Copy the images to the respective folders based on the train-test split of the labels
 def copy_images(df, source_dir, target_dir):
-    # Expand the source and target directories properly
+    # Expand source and target directories properly
     source_dir = os.path.expanduser(source_dir)
     target_dir = os.path.expanduser(target_dir)
     
     os.makedirs(target_dir, exist_ok=True)  # Ensure target directory exists
-    
-    for filename in df['filename']:
-        source_path = os.path.join(source_dir, filename)
-        target_path = os.path.join(target_dir, filename)
-        
-        # Check if the file already exists in the target directory
-        if not os.path.exists(target_path):
-            shutil.copy(source_path, target_path)
-        else:
-            print(f"File already exists in target: {target_path}")
 
-# Move Images to respective directories
+    for label in df['label'].unique():
+        class_dir = os.path.join(target_dir, str(label))
+        os.makedirs(class_dir, exist_ok=True)
+
+        # Filter images for this label
+        images = df[df['label'] == label]['filename']
+        for filename in images:
+            source_path = os.path.join(source_dir, filename)
+            target_path = os.path.join(class_dir, filename)
+
+            # Check if the file already exists in the target directory
+            if not os.path.exists(target_path):
+                shutil.copy(source_path, target_path)
+            else:
+                print(f"File already exists in target: {target_path}")
+
+# Setup directories
 source_directory = os.path.expanduser('~/Desktop/img_align_celeba')
 train_directory = os.path.expanduser('~/Desktop/train')
 test_directory = os.path.expanduser('~/Desktop/test')
@@ -93,6 +97,12 @@ copy_images(train_df, source_directory, train_directory)
 copy_images(test_df, source_directory, test_directory)
 logger.info("Completed copying training and testing images")
 
+# Log the number of files in training and testing directories
+train_files = sum([len(files) for r, d, files in os.walk(train_directory)])
+test_files = sum([len(files) for r, d, files in os.walk(test_directory)])
+logger.info(f"Number of train images: {train_files}")
+logger.info(f"Number of test images: {test_files}")
+
 # Load data using ImageDataGenerator
 train_datagen = ImageDataGenerator(rescale=1./255)
 test_datagen = ImageDataGenerator(rescale=1./255)
@@ -101,15 +111,17 @@ train_generator = train_datagen.flow_from_directory(
     train_directory,
     target_size=(224, 224),
     batch_size=32,
-    class_mode='categorical')
+    class_mode='categorical'
+)
 
 test_generator = test_datagen.flow_from_directory(
     test_directory,
     target_size=(224, 224),
     batch_size=32,
-    class_mode='categorical')
+    class_mode='categorical'
+)
 
-# Define the model
+# Define the Sequential model
 num_classes = 10153
 model = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
@@ -129,10 +141,12 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # Train the model
 history = model.fit(
     train_generator,
-    epochs=10,  
-    validation_data=test_generator
+    epochs=10,
+    validation_data=test_generator,
+    callbacks=[logging_callback, tensorboard_callback]
 )
 
 # Evaluate the model
 test_loss, test_accuracy = model.evaluate(test_generator)
 print("Test accuracy:", test_accuracy)
+
