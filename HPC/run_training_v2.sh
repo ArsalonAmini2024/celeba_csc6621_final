@@ -5,9 +5,8 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16  
 #SBATCH --time=72:00:00
-#SBATCH --mem=128G  #
-#SBATCH --gres=gpu:t4:4  # Request 4 T4 GPUs
-#SBATCH --partition=teaching  # Use the teaching partition
+#SBATCH —gres=gpu:v100:8
+#SBATCH —partition=dgx
 
 # Set up the path for the virtual environment
 VENV_PATH=~/Desktop/celeba_csc6621_final/HPC/venv
