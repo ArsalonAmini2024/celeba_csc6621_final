@@ -16,7 +16,6 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.models import Sequential
 
 
-
 # Set up logging
 tensorboard_log_dir = os.path.expanduser('~/Desktop/tensorboard_logs')
 tensorboard_callback = TensorBoard(log_dir=tensorboard_log_dir, histogram_freq=1, write_graph=True)
@@ -69,10 +68,14 @@ logger.info(f"Unique classes in testing set: {test_df['label'].nunique()}")
 
 # Copy the actual images to the respective folders based on the train-test split of the labels
 def copy_images(df, source_dir, target_dir):
+    # Expand the source and target directories properly
+    source_dir = os.path.expanduser(source_dir)
+    target_dir = os.path.expanduser(target_dir)
+    
     os.makedirs(target_dir, exist_ok=True)  # Ensure target directory exists
     for filename in df['filename']:
         shutil.copy(os.path.join(source_dir, filename), os.path.join(target_dir, filename))
-
+        
 # Set directory paths
 source_directory = '~/Desktop/img_align_celeba'
 train_directory = '~/Desktop/train'
