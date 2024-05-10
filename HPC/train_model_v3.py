@@ -131,6 +131,13 @@ train_datagen = ImageDataGenerator(
     horizontal_flip=True          # Flips the image horizontally
 )
 
+train_generator = train_datagen.flow_from_directory(
+    train_directory,
+    target_size=(224, 224),
+    batch_size=32,
+    class_mode='categorical'
+)
+
 # no data augmentation for test 
 test_datagen = ImageDataGenerator(rescale=1./255)
 test_generator = test_datagen.flow_from_directory(
@@ -143,7 +150,7 @@ test_generator = test_datagen.flow_from_directory(
 logger.info("Image data generators initialized")
 
 # Define the base ResNet50 model
-base_model = ResNet50(weights=None, include_top=False, input_shape=(224, 224, 3))
+base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 # Add new layers on top
 x = base_model.output
