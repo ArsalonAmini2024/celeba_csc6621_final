@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16  
 #SBATCH --time=72:00:00
-#SBATCH —gres=gpu:v100:8
+#SBATCH —gres=gpu:v100:1
 #SBATCH —partition=dgx
 
 # Set up the path for the virtual environment
