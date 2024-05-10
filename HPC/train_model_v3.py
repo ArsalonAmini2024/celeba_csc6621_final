@@ -2,6 +2,7 @@
 import os
 import shutil
 import logging
+from datetime import datetime
 
 # Data Pre-processing Libraries
 import pandas as pd
@@ -14,6 +15,7 @@ from tensorflow.keras.layers import GlobalAveragePooling2D, Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import Callback, TensorBoard
+
 
 # Configure logging with the unique log file
 current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -49,6 +51,7 @@ tensorboard_callback = TensorBoard(
 
 logger = logging.getLogger()
 logging_callback = LoggingCallback(logger)
+
 
 ##### LOAD AND PREPARE DATA #####
 
@@ -116,16 +119,20 @@ logger.info(f"Number of train images: {train_files}")
 logger.info(f"Number of test images: {test_files}")
 
 # Load data using ImageDataGenerator
-train_datagen = ImageDataGenerator(rescale=1./255)
-test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory(
-    train_directory,
-    target_size=(224, 224),
-    batch_size=32,
-    class_mode='categorical'
+
+train_datagen = ImageDataGenerator(
+    rescale=1./255,               # Normalizes pixel values to [0, 1]
+    rotation_range=20,            # Rotates the image randomly up to 20 degrees
+    width_shift_range=0.2,        # Shifts the image horizontally by up to 20% of the width
+    height_shift_range=0.2,       # Shifts the image vertically by up to 20% of the height
+    shear_range=0.2,              # Shears the image by up to 20%
+    zoom_range=0.2,               # Zooms in or out by up to 20%
+    horizontal_flip=True          # Flips the image horizontally
 )
 
+# no data augmentation for test 
+test_datagen = ImageDataGenerator(rescale=1./255)
 test_generator = test_datagen.flow_from_directory(
     test_directory,
     target_size=(224, 224),

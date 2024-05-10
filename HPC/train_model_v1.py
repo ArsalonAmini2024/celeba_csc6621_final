@@ -15,34 +15,39 @@ from tensorflow.keras.callbacks import Callback, TensorBoard
 from tensorflow.keras.models import Sequential
 
 # Set up logging
-# Tensorboard logs
-log_dir = "~/Desktop/tensorboard_logs"
-tensorboard_callback = TensorBoard(
-    log_dir=log_dir, 
-    histogram_freq=1,  # Log weight histograms every epoch
-    write_graph=True,  # Log the computational graph
-    update_freq='epoch'  # Log scalars at each epoch
-)
-class LoggingCallback(Callback):
-    def __init__(self, logger):
-        super().__init__()
-        self.logger = logger
+# Configure logging with the unique log file
+current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+log_dir = os.path.expanduser(f"~/Desktop/tensorboard_logs/{current_time}")
+log_file = os.path.expanduser(f"~/Desktop/celeba_image_classification_{current_time}.log")
 
-    def on_epoch_end(self, epoch, logs=None):
-        # logs is a dictionary with training/validation loss and metrics (e.g., accuracy)
-        train_acc = logs.get('accuracy', 'N/A')
-        val_acc = logs.get('val_accuracy', 'N/A')
-        self.logger.info(f"Epoch {epoch + 1}: Training Accuracy = {train_acc}, Validation Accuracy = {val_acc}")
-
-log_file = os.path.expanduser('~/Desktop/celeba_image_classification_model_v1.log')
 logging.basicConfig(
     filename=log_file,
     filemode='w',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger()
 
+class LoggingCallback(Callback):
+    def __init__(self, logger):
+        super().__init__()
+        self.logger = logger
+
+    def on_epoch_end(self, epoch, logs=None):
+        # Logs is a dictionary with training/validation loss and metrics (e.g., accuracy)
+        train_acc = logs.get('accuracy', 'N/A')
+        val_acc = logs.get('val_accuracy', 'N/A')
+        self.logger.info(f"Epoch {epoch + 1}: Training Accuracy = {train_acc}, Validation Accuracy = {val_acc}")
+
+
+# Tensorboard logs
+tensorboard_callback = TensorBoard(
+    log_dir=log_dir, # Defined above 
+    histogram_freq=1,  # Log weight histograms every epoch
+    write_graph=True,  # Log the computational graph
+    update_freq='epoch'  # Log scalars at each epoch
+)
+
+logger = logging.getLogger()
 logging_callback = LoggingCallback(logger)
 
 ##### LOAD AND PREPARE DATA #####
