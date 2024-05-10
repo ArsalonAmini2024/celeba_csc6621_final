@@ -6,28 +6,14 @@
 #SBATCH --cpus-per-task=16  
 #SBATCH --time=72:00:00
 #SBATCH --gres=gpu:v100:1
-#SBATCH —-partition=dgx
+#SBATCH --partition=dgx
 
-# Set up the path for the virtual environment
-VENV_PATH=~/Desktop/celeba_csc6621_final/HPC/venv
+# Upgrade pip and install the necessary packages globally (or for the user only)
+pip install --upgrade --user pip
+pip install --user pandas scikit-learn tensorflow matplotlib seaborn tensorflow-addons
 
-# Create a virtual environment if it doesn't exist
-if [ ! -d "$VENV_PATH" ]; then
-    python3 -m venv "$VENV_PATH"
-fi
-
-# Activate the virtual environment
-source "$VENV_PATH/bin/activate"
-
-# Upgrade pip and install the necessary packages
-pip install --upgrade pip
-pip install pandas scikit-learn tensorflow matplotlib seaborn tensorflow-addons
-
-# Run the Python training script within this environment
+# Run the Python training script
 srun python3 ~/Desktop/celeba_csc6621_final/HPC/train_model_v2.py
-
-# Deactivate the virtual environment (optional)
-deactivate
 
 
 
