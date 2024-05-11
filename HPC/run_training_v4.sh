@@ -4,7 +4,7 @@
 #SBATCH --error=error_%j.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16  
-#SBATCH --time=24:00:00
+#SBATCH --time=8:00:00
 #SBATCH --gres=gpu:v100:8
 #SBATCH --partition=dgx
 
