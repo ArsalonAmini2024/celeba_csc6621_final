@@ -1,7 +1,10 @@
+#### BASIC CNN ######
+
 # System Imports
 import os
 import shutil
 import logging
+from datetime import datetime
 
 # Data pre-processing Libraries
 import pandas as pd
@@ -17,8 +20,8 @@ from tensorflow.keras.models import Sequential
 # Set up logging
 # Configure logging with the unique log file
 current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
-log_dir = os.path.expanduser(f"~/Desktop/tensorboard_logs/{current_time}")
-log_file = os.path.expanduser(f"~/Desktop/celeba_image_classification_{current_time}.log")
+log_dir = os.path.expanduser(f"~/Desktop/tensorboard_logs/CNN/{current_time}")
+log_file = os.path.expanduser(f"~/Desktop/cnn_{current_time}.log")
 
 logging.basicConfig(
     filename=log_file,
