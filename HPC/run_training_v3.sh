@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=Amini-Arsalon-Celeba-image-classification-ResNet-random-weights
+#SBATCH --job-name=Amini-Arsalon-Celeba-image-classification-ResNet-imagenet-weights
 #SBATCH --output=output_%j.txt
 #SBATCH --error=error_%j.txt
 #SBATCH --ntasks=1
